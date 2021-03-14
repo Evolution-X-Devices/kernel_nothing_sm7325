@@ -6597,6 +6597,7 @@ static void init_gro_hash(struct napi_struct *napi)
 	}
 	napi->gro_bitmask = 0;
 }
+EXPORT_SYMBOL(dev_set_threaded);
 
 int dev_set_threaded(struct net_device *dev, bool threaded)
 {

@@ -768,6 +768,14 @@ ifdef CONFIG_CC_WERROR
 KBUILD_CFLAGS  += -Werror
 endif
 
+ifdef CONFIG_CC_IS_CLANG
+KBUILD_CFLAGS += -mcpu=cortex-a55
+KBUILD_AFLAGS += -mcpu=cortex-a55
+else
+KBUILD_CFLAGS += -mcpu=cortex-a76.cortex-a55
+KBUILD_AFLAGS += -mcpu=cortex-a76.cortex-a55
+endif
+
 ifdef CONFIG_POLLY_CLANG
 POLLY_FLAGS	:= -mllvm -polly \
 		   -mllvm -polly-ast-use-context \

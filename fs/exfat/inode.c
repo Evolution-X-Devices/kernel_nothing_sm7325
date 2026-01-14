@@ -170,7 +170,6 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
 				clu, count, &last_clu);
 		if (err)
 			return -EIO;
-		*count = (*clu == EXFAT_EOF_CLUSTER) ? 0 : 1;
 	}
 
 	if (*clu == EXFAT_EOF_CLUSTER) {

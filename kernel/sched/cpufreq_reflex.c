@@ -1025,6 +1025,11 @@ static int rfx_start(struct cpufreq_policy *policy)
 		/* Initialize idle-time baseline for hispeed busy% */
 		rfx_c->prev_idle_time = get_cpu_idle_time(cpu,
 					&rfx_c->prev_wall_time, 1);
+	}
+
+	for_each_cpu(cpu, policy->cpus) {
+		struct rfx_cpu *rfx_c = &per_cpu(rfx_cpu, cpu);
+
 		cpufreq_add_update_util_hook(cpu, &rfx_c->update_util,
 					     policy_is_shared(policy) ?
 							rfx_update_shared :

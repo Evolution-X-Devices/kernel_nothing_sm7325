@@ -546,8 +546,9 @@ mutex or just to use i_size_read() instead.
 Note: this does not protect the file->f_pos against concurrent modifications
 since this is something the userspace has to take care about.
 
-->iterate_shared() is called with i_rwsem held for reading, and with the
-file f_pos_lock held exclusively
+->iterate() is called with i_rwsem exclusive.
+
+->iterate_shared() is called with i_rwsem at least shared.
 
 ->fasync() is responsible for maintaining the FASYNC bit in filp->f_flags.
 Most instances call fasync_helper(), which does that maintenance, so it's

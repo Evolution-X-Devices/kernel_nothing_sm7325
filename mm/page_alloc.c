@@ -4364,7 +4364,8 @@ retry:
 	 */
 	if (!page && !drained) {
 		unreserve_highatomic_pageblock(ac, false);
-		drain_all_pages(NULL);
+		if (!task_is_critical())
+			drain_all_pages(NULL);
 		drained = true;
 		goto retry;
 	}
@@ -4822,6 +4823,11 @@ retry:
 	/* Avoid recursion of direct reclaim */
 	if (current->flags & PF_MEMALLOC)
 		goto nopage;
+
+	if (task_is_critical() && !(alloc_flags & ALLOC_HIGH)) {
+		alloc_flags |= ALLOC_HIGH;
+		goto retry;
+	}
 
 	/* Try direct reclaim and then allocating */
 	if (!woke_kshrinkd) {

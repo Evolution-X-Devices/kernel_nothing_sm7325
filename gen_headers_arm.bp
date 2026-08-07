@@ -318,6 +318,7 @@ gen_headers_out_arm = [
     "linux/ioctl.h",
     "linux/iommu.h",
     "linux/ion.h",
+    "linux/ioprio.h",
     "linux/ip.h",
     "linux/ip6_tunnel.h",
     "linux/ip_vs.h",

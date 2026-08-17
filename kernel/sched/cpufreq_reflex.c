@@ -30,6 +30,7 @@
 #include <linux/sched/cpufreq.h>
 #include <linux/slab.h>
 #include <linux/tick.h>
+#include <linux/sched/cpufreq.h>
 
 #include <trace/hooks/sched.h>
 
@@ -285,8 +286,7 @@ static unsigned int rfx_get_next_freq(struct rfx_policy *rfx_pol,
 	else
 		freq = policy->cur + (policy->cur >> 2);
 
-	trace_android_vh_map_util_freq(util, freq, max, &next_freq, policy,
-				       &rfx_pol->need_freq_update);
+	trace_android_vh_map_util_freq(util, freq, max, &next_freq);
 	if (next_freq)
 		freq = next_freq;
 	else
@@ -315,12 +315,9 @@ static unsigned int rfx_get_next_freq(struct rfx_policy *rfx_pol,
 static void rfx_get_util(struct rfx_cpu *rfx_c, unsigned long boost)
 {
 	struct rq *rq = cpu_rq(rfx_c->cpu);
-	unsigned long util = cpu_util_cfs(rq);
-	unsigned long max_cap = arch_scale_cpu_capacity(rfx_c->cpu);
 
 	rfx_c->bw_min = cpu_bw_dl(rq);
-	rfx_c->util   = schedutil_cpu_util(rfx_c->cpu, util, max_cap,
-					   FREQUENCY_UTIL, NULL);
+	rfx_c->util   = sched_cpu_util(rfx_c->cpu);
 	rfx_c->util   = max(rfx_c->util, boost);
 }
 
@@ -1072,7 +1069,6 @@ static void rfx_limits(struct cpufreq_policy *policy)
 static struct cpufreq_governor reflex_gov = {
 	.name			= "reflex",
 	.owner			= THIS_MODULE,
-	.flags			= CPUFREQ_GOV_DYNAMIC_SWITCHING,
 	.init			= rfx_init,
 	.exit			= rfx_exit,
 	.start			= rfx_start,
